@@ -1,7 +1,19 @@
 window.addEventListener('load', () => {
   const calculatePricesBtn = document.getElementById('calculate');
   calculatePricesBtn.addEventListener('click', calculateAll);
+
+  let createButton = document.getElementById('create');
+  createButton.addEventListener('click', createProduct);
+
+  addOnClickEventForRemoveButtons();
 });
+
+function addOnClickEventForRemoveButtons() {
+  let removeButtons = document.getElementsByClassName('btn btn-remove');
+  for (let i = 0; i < removeButtons.length; i++) {
+    removeButtons[i].addEventListener('click', removeProduct);
+  }
+}
 
 // ITERATION 1
 function updateSubtotal(product) {
@@ -23,19 +35,41 @@ function calculateAll() {
 }
 
 // ITERATION 4
-/*
 function removeProduct(event) {
   const target = event.currentTarget;
-  console.log('The target in remove is:', target);
-  //... your code goes here
+  const trParent = target.parentNode.parentNode;
+  trParent.remove();  
+  calculateAll();
 }
-*/
 
 // ITERATION 5
-/*
-function createProduct() {
-  //... your code goes here
+function addProductRow() {
+  let tableProducts = document.querySelector('#cart tbody');
+  let rowToClone = document.querySelectorAll('tbody .product')[0];
+  let clonedRow = rowToClone.cloneNode(true);
+  tableProducts.appendChild(clonedRow);
+  return clonedRow;
 }
 
-*/
+function createProduct() {
+  const sourceData = document.querySelector(".create-product");
+  const name = sourceData.getElementsByTagName('input')[0].value;
+  const price = sourceData.getElementsByTagName('input')[1].value;
+  
+  const clonedRow = addProductRow();
+  clonedRow.querySelector('.name').innerHTML = name;
+  clonedRow.querySelector('.price span').innerHTML = parseFloat(price);
+  addOnClickEventForRemoveButton(clonedRow.querySelector('button'));
+  cleanProductTableFooter();
+}
 
+function addOnClickEventForRemoveButton(button) {
+  button.addEventListener('click', removeProduct);
+}
+
+
+function cleanProductTableFooter() {
+  const sourceData = document.querySelector(".create-product");
+  sourceData.getElementsByTagName('input')[0].value = "";
+  sourceData.getElementsByTagName('input')[1].value = "";
+}
